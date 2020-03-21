@@ -74,9 +74,11 @@ void Stopwatch::timeout(){
     else {
         m_elapsed = m_watch.elapsed()+last_elapsed;
     }
-    long long seconds = m_elapsed/1000;
+    long long hours = (m_elapsed/1000)/3600;
+    long long minutes = ((m_elapsed/1000)/60)%60;
+    long long seconds =  (m_elapsed/1000)%60;
     long long centiseconds = (m_elapsed % 1000)/10;
-    QString time = QString("%2.%1").arg(centiseconds).arg(seconds);
+    QString time = QString("%4:%3:%2.%1").arg(centiseconds).arg(seconds).arg(minutes).arg(hours);
     //setDisplay(QString::number(m_watch.elapsed()));
     setDisplay(time);
     emit displayChanged();
@@ -86,7 +88,7 @@ void Stopwatch::timeout(){
 // ***************************** slots end *********************************
 void Stopwatch::updateDisplay(bool reset){
     if (reset)
-        setDisplay("0.00");
+        setDisplay("0:0:0.00");
 }
 
 
