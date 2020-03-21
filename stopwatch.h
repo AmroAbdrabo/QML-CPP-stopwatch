@@ -14,6 +14,7 @@ class Stopwatch : public QObject
 
 public:
     explicit Stopwatch(QObject *parent = nullptr);
+    //Stopwatch();
 signals:
     void bestChanged();
     void displayChanged();
@@ -23,6 +24,8 @@ public slots:
     void stop();
     void reset();
     void toggle(bool value);
+    void timeout();
+
 private:
     QTimer m_timer;
     QElapsedTimer m_watch;
@@ -30,7 +33,6 @@ private:
     double m_best;
     bool m_fastest;
 
-    void timeout();
     void updateDisplay(bool reset = false);
     double best();
     void setBest(double value);
