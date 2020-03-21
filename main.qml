@@ -70,7 +70,7 @@ ApplicationWindow {
         height: 41
         text : stopwatch.display
         anchors.verticalCenterOffset: -50
-        anchors.horizontalCenterOffset: 0
+        anchors.horizontalCenterOffset: 20
         font.pointSize: 60
         color: "blue"
         font.bold: true

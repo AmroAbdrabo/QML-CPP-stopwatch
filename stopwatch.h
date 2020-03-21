@@ -27,10 +27,12 @@ public slots:
     void timeout();
 
 private:
+    bool stoppedClicked;
     QTimer m_timer;
     QElapsedTimer m_watch;
     QString m_display;
     double m_best;
+    double last_elapsed;
     bool m_fastest;
 
     void updateDisplay(bool reset = false);

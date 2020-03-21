@@ -1,10 +1,13 @@
 #include "stopwatch.h"
 #include <QTimer>
+#include <QDebug>
 
 Stopwatch::Stopwatch(QObject *parent) : QObject(parent)
 {
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
     this->m_best = 0;
+    this->last_elapsed = 0;
+    this->stoppedClicked = false;
 }
 
 // ***************************** slots ***********************************
@@ -15,18 +18,29 @@ void Stopwatch::start(){
 
 void Stopwatch::stop(){
     this->m_timer.stop();
-    double elapsed = this->m_watch.elapsed();
-    if (elapsed > this->m_best)
-    {
-        setBest(elapsed);
-        emit bestChanged();
-        this->timeout();
-    }
+
+    double elapsed = this->m_watch.elapsed() + last_elapsed;
+    last_elapsed = elapsed;
+    qDebug() << last_elapsed;
+
+    //this->m_watch.restart();
+
+    //if (elapsed > this->m_best)
+    //{
+     //   setBest(elapsed);
+     //   emit bestChanged();
+     //   this->timeout();
+    //}
+    stoppedClicked = true;
+
 
 }
 
 void Stopwatch::reset(){
     m_watch.restart();
+    last_elapsed = 0;
+    updateDisplay(true);
+    emit displayChanged();
 
 
 }
@@ -49,10 +63,20 @@ void Stopwatch::toggle(bool value){
 
 
 void Stopwatch::timeout(){
-    long long m_elapsed = m_watch.elapsed();
+    //qDebug() << last_elapsed;
+    long long m_elapsed;
+    if (stoppedClicked)
+    {
+        m_watch.restart();
+        m_elapsed = m_watch.elapsed() + last_elapsed;
+        stoppedClicked = false;
+    }
+    else {
+        m_elapsed = m_watch.elapsed()+last_elapsed;
+    }
     long long seconds = m_elapsed/1000;
-    double centiseconds = (m_elapsed % 1000);
-    QString time = QString("%2.%1").arg(centiseconds, 2,'f', 0).arg(seconds);
+    long long centiseconds = (m_elapsed % 1000)/10;
+    QString time = QString("%2.%1").arg(centiseconds).arg(seconds);
     //setDisplay(QString::number(m_watch.elapsed()));
     setDisplay(time);
     emit displayChanged();
@@ -62,7 +86,7 @@ void Stopwatch::timeout(){
 // ***************************** slots end *********************************
 void Stopwatch::updateDisplay(bool reset){
     if (reset)
-        setDisplay(QString::number(0));
+        setDisplay("0.00");
 }
 
 
