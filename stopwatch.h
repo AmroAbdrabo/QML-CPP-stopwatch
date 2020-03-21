@@ -8,6 +8,10 @@
 class Stopwatch : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(double best READ best WRITE setBest NOTIFY bestChanged)
+    Q_PROPERTY(QString display READ display WRITE setDisplay NOTIFY displayChanged)
+
 public:
     explicit Stopwatch(QObject *parent = nullptr);
 signals:
